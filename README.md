@@ -8,6 +8,7 @@ A Windows tool for writing images to USB sticks or SD/CF cards
 源码已经 5 年没更新了，我去掉了一些没用的文件
 
 保证代码能用 Qt 5.15.2 + msvc 2019 x64 在 win10 下正常编译
+
 ![ui](https://github.com/abc881858/win32diskimager/assets/320155/8ae6d77f-69c1-47b2-8ff7-c5a09847efc4)
 
 ------
