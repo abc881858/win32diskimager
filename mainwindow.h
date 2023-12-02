@@ -62,6 +62,7 @@ private slots:
     void on_bHashGen_clicked();
     void on_cboxHashType_currentIndexChanged(int);
     void updateHashControls();
+    void on_bExit_clicked();
 };
 
 #endif // MAINWINDOW_H

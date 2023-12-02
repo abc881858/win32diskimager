@@ -19,7 +19,7 @@ int main(int argc, char *argv[])
     translator.load(":/zh_cn.qm");
 
     QApplication app(argc, argv);
-    app.setApplicationDisplayName(VER);
+    app.setApplicationDisplayName("1.0");
     app.installTranslator(&translator);
 
     MainWindow* mainwindow = MainWindow::getInstance();

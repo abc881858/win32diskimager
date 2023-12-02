@@ -49,7 +49,7 @@ HANDLE getHandleOnDevice(int device, DWORD access)
 {
     HANDLE hDevice;
     QString devicename = QString("\\\\.\\PhysicalDrive%1").arg(device);
-    hDevice = CreateFile(devicename.toLatin1().data(), access, FILE_SHARE_READ | FILE_SHARE_WRITE, NULL, OPEN_EXISTING, 0, NULL);
+    hDevice = CreateFile(LPCWSTR(devicename.toStdWString().c_str()), access, FILE_SHARE_READ | FILE_SHARE_WRITE, NULL, OPEN_EXISTING, 0, NULL);
     if (hDevice == INVALID_HANDLE_VALUE)
     {
         wchar_t *errormessage=NULL;
@@ -68,7 +68,7 @@ HANDLE getHandleOnVolume(int volume, DWORD access)
     HANDLE hVolume;
     char volumename[] = "\\\\.\\A:";
     volumename[4] += volume;
-    hVolume = CreateFile(volumename, access, FILE_SHARE_READ | FILE_SHARE_WRITE, NULL, OPEN_EXISTING, 0, NULL);
+    hVolume = CreateFile(LPCWSTR(QString(volumename).toStdWString().c_str()), access, FILE_SHARE_READ | FILE_SHARE_WRITE, NULL, OPEN_EXISTING, 0, NULL);
     if (hVolume == INVALID_HANDLE_VALUE)
     {
         wchar_t *errormessage=NULL;
@@ -245,7 +245,7 @@ bool spaceAvailable(char *location, unsigned long long spaceneeded)
 {
     ULARGE_INTEGER freespace;
     BOOL bResult;
-    bResult = GetDiskFreeSpaceEx(location, NULL, NULL, &freespace);
+    bResult = GetDiskFreeSpaceEx(LPCWSTR(QString(location).toStdWString().c_str()), NULL, NULL, &freespace);
     if (!bResult)
     {
         wchar_t *errormessage=NULL;
@@ -417,12 +417,12 @@ bool checkDriveType(char *name, ULONG *pid)
         return(retVal);
     }
 
-    driveType = GetDriveType(nameWithSlash);
+    driveType = GetDriveType(LPCWSTR(QString(nameWithSlash).toStdWString().c_str()));
     switch( driveType )
     {
     case DRIVE_REMOVABLE: // The media can be removed from the drive.
     case DRIVE_FIXED:     // The media cannot be removed from the drive. Some USB drives report as this.
-        hDevice = CreateFile(nameNoSlash, FILE_READ_ATTRIBUTES, FILE_SHARE_READ | FILE_SHARE_WRITE, NULL, OPEN_EXISTING, 0, NULL);
+        hDevice = CreateFile(LPCWSTR(QString(nameNoSlash).toStdWString().c_str()), FILE_READ_ATTRIBUTES, FILE_SHARE_READ | FILE_SHARE_WRITE, NULL, OPEN_EXISTING, 0, NULL);
         if (hDevice == INVALID_HANDLE_VALUE)
         {
             wchar_t *errormessage=NULL;
@@ -457,7 +457,7 @@ bool checkDriveType(char *name, ULONG *pid)
                 // IOCTL_STORAGE_CHECK_VERIFY2 fails on some devices under XP/Vista, try the other (slower) method, just in case.
                 {
                     CloseHandle(hDevice);
-                    hDevice = CreateFile(nameNoSlash, FILE_READ_DATA, FILE_SHARE_READ | FILE_SHARE_WRITE, NULL, OPEN_EXISTING, 0, NULL);
+                    hDevice = CreateFile(LPCWSTR(QString(nameNoSlash).toStdWString().c_str()), FILE_READ_DATA, FILE_SHARE_READ | FILE_SHARE_WRITE, NULL, OPEN_EXISTING, 0, NULL);
                     if(DeviceIoControl(hDevice, IOCTL_STORAGE_CHECK_VERIFY, NULL, 0, NULL, 0, &cbBytesReturned, (LPOVERLAPPED) NULL))
                     {
                         *pid = deviceInfo.DeviceNumber;

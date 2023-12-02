@@ -1206,3 +1206,8 @@ void MainWindow::on_cboxHashType_currentIndexChanged(int)
 {
     updateHashControls();
 }
+
+void MainWindow::on_bExit_clicked()
+{
+    qApp->quit();
+}
